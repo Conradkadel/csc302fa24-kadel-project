@@ -1,0 +1,116 @@
+@font-face {
+    font-family: 'HumaneFont';
+    src: url('styles/HKGroteskWide-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+body {
+    font-family: 'HumaneFont', Arial, sans-serif;
+    background-color: #9e9a9a; /* Light background for a dashboard feel */
+    margin: 0;
+    padding: 20px;
+}
+header {
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+
+}
+
+header h1 {
+    margin: 0; 
+}
+
+.container {
+    max-width: 1200px;
+    margin: auto;
+}
+
+.dashboard-header, .dashboard-footer {
+    background-color: #333; /* Dark background for header/footer */
+    color: #fff;
+    padding: 15px 20px;
+    border-radius: 8px;
+}
+
+.content {
+    background-color: #dad7d7; /* White background for content area */
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    position: relative; /* Allow positioning of buttons */
+}
+
+h1, h2, h3 {
+    margin: 10px 0;
+}
+
+.stock-summary {
+    border-bottom: 1px solid #ccc;
+    padding-bottom: 15px;
+}
+.stock-summary h2{
+    display: flex;
+    align-items: center; 
+    justify-content: center; 
+    font-size: 200%;
+}
+
+.stock-price {
+    color: green; /* Change color based on price change */
+}
+
+.graph-placeholder {
+    height: 300px; 
+    border: 1px dashed #ccc; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center;
+    color: #aaa;
+}
+
+h3 {
+    margin-top: 20px;
+}
+
+section {
+    margin-bottom: 20px;
+}
+
+footer {
+    text-align: center;
+}
+
+/* Navigation button styles */
+.back-button {
+    position: absolute;
+    left: 150px;
+    background-color: #007bff; /* Blue background */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+.favorite-button {
+    position: absolute;
+    right: 150px;
+    background-color: #ffd700; /* Gold background */
+    color: white;
+    border: none;
+    border-radius: 50%;
+    padding: 10px;
+    cursor: pointer;
+    font-size: 20px;
+}
+
+/* Add hover effects for buttons */
+.back-button:hover {
+    background-color: #0056b3; /* Darker blue */
+}
+
+.favorite-button:hover {
+    background-color: #ffc107; /* Darker gold */
+}

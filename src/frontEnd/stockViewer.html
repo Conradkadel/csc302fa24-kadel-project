@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/mainStyle.css">
+    <link rel="stylesheet" href="styles/stockViewer.css">
+    <title>Stock Viewer</title>  
+</head>
+<body>
+    <div class="container">
+        <header class="dashboard-header">
+            <h1>Stock Viewer</h1>
+            <button class="back-button" onclick="window.location.href='dashboard.html';">&#8592; Back to Dashboard</button>
+        </header>
+
+        <main class="content">
+            <button class="favorite-button" title="Add to Favorites">&#9733;</button>
+            <section class="stock-summary">
+                <h2>Apple Inc. (AAPL)</h2>
+                <div class="stock-price">
+                    <h3>$150.00</h3>
+                    <span class="price-change">+1.20% (Today's Change)</span>
+                </div>
+            </section>
+
+            <section class="stock-info">
+                <h3>Overview</h3>
+                <ul>
+                    <li><strong>Market Cap:</strong> $2.5T</li>
+                    <li><strong>52-Week Range:</strong> $130.00 - $175.00</li>
+                    <li><strong>P/E Ratio:</strong> 28.50</li>
+                </ul>
+                <p>A brief description of Apple Inc. goes here.</p>
+            </section>
+
+            <section class="graph">
+                <h3>Price Graph</h3>
+                <div class="graph-placeholder">Graph will be here</div>
+            </section>
+
+            <section class="additional-info">
+                <h3>Key Metrics</h3>
+                <ul>
+                    <li><strong>EPS:</strong> $5.00</li>
+                    <li><strong>Dividend Yield:</strong> 0.60%</li>
+                </ul>
+                <h3>Recent News</h3>
+                <ul>
+                    <li><a href="#">Apple announces new product launch</a></li>
+                    <li><a href="#">Apple's quarterly earnings report exceeds expectations</a></li>
+                </ul>
+            </section>
+
+            <section class="resources">
+                <h3>Useful Links</h3>
+                <ul>
+                    <li><a href="https://finance.yahoo.com">Yahoo Finance</a></li>
+                    <li><a href="https://www.google.com/finance">Google Finance</a></li>
+                    <li><a href="https://seekingalpha.com">Seeking Alpha</a></li>
+                    <li><a href="https://www.apple.com">Official Website</a></li>
+                </ul>
+            </section>
+        </main>
+
+        <footer class="dashboard-footer">
+            <p>&copy; 2024 Stock Viewer App</p>
+        </footer>
+    </div>
+</body>
+</html>
