@@ -1,3 +1,8 @@
+<!-- API Backend FOR Stock viwer 
+ 
+      Created by Conrad Kadel 
+
+-->
 <?php
 header('Content-type: application/json');
 session_start();
@@ -14,11 +19,6 @@ $dbName = 'data.db';
 require_once('db.php');
 require_once('stockInfo.php');
 
-// Leave this alone. It checks if you have a directory named www-data in
-// you home directory (on a *nix server). If so, the database file is
-// sought/created there. Otherwise, it uses the current directory.
-// The former works on digdug where I've set up the www-data folder for you;
-// the latter should work on your computer.
 $matches = [];
 preg_match('#^/~([^/]*)#', $_SERVER['REQUEST_URI'], $matches);
 $homeDir = count($matches) > 1 ? $matches[1] : '';

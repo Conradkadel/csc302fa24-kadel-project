@@ -1,3 +1,8 @@
+<!-- Search PAGE FOR Stock viwer page
+ 
+      Created by Conrad Kadel 
+
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,11 +16,13 @@
         
     </style>
     <script>
+        // Ajax Function to connect to backend. 
+        // POST request to Api.php 
         $(document).ready(function() {
             $('#stockForm').on('submit', function(event) {
                 event.preventDefault(); // Prevent the default form submission
                 $.ajax({
-                    url: 'api.php', // Ensure this is the correct path to api.php
+                    url: '../backEnd/api.php', // Ensure this is the correct path to api.php
                     method: 'POST', // Make sure this is set to POST
                     data: {
                         action: 'getStockData',
@@ -26,7 +33,7 @@
                         $('#outputBox').html(JSON.stringify(data, null, 2));
                     },
                     error: function(jqXHR, status, error) {
-                        console.error(error);
+                        console.log(error);
                         $('#outputBox').html(error);
                     }
                 });

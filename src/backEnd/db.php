@@ -1,3 +1,9 @@
+<!-- DB Manager FOR Stock viwer 
+ 
+      Created by Conrad Kadel 
+
+-->
+
 <?php
 
 // TODO Change this as needed. SQLite will look for a file with this name, or
