@@ -20,10 +20,12 @@ src/ ├── frontend/
          └── (PHP files will be developed here)
          
 ## Features
-- [x] Display of market information
-- [x] Displaying favorite asset holdings
-- [x] Search for stock
-- [x] Analysis on a chart
+- [ ] Having a Dashboard, Search, Friend, Stockviewer and Settings Site (90% Done )
+- [ ] Connect to 3rd party api (Currently in the Work / 70% done)
+- [ ] Display of market information
+- [ ] Displaying favorite asset holdings
+- [ ] Search for stock (Currently in the Work / 50% done)
+- [ ] Analysis on a chart
 - [ ] Get more information and news
 - [ ] Connect with friends and chat
 
@@ -57,6 +59,15 @@ The application utilizes two databases:
    - `price`: Current price of the stock
    - `priceHistory`: Historical price data
    - `information`: Additional information about the stock
+
+
+## Error Handeling / Issues
+
+   - Getting connection for 3rd Partz Api is causing some Problems
+     Also dont know how to correctly set it up. Will need some trial
+     and error. 
+   
+   - 
 
 ---
 
