@@ -1,6 +1,6 @@
 <?php
 header('Content-type: application/json');
-
+session_start();
 // For debugging:
 error_reporting(E_ALL);
 ini_set('display_errors', '1');
