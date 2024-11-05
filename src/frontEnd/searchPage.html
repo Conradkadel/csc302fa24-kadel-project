@@ -13,33 +13,23 @@
     <script>
         $(document).ready(function() {
             $('#stockForm').on('submit', function(event) {
-                var $form = $(this);
-                var $outputBox = $('#outputBox');
-
+                event.preventDefault(); // Prevent the default form submission
                 $.ajax({
-                    url: 'src/backEnd/api.php',
-                    method: 'POST',
+                    url: 'api.php', // Ensure this is the correct path to api.php
+                    method: 'POST', // Make sure this is set to POST
                     data: {
                         action: 'getStockData',
-                        symbol: $('#symbol').val() // Assuming you have an input with id 'symbol'
+                        symbol: $('#symbol').val() // Your input field
                     },
                     success: function(data) {
-                        // Handle success
                         console.log(data);
                         $('#outputBox').html(JSON.stringify(data, null, 2));
                     },
                     error: function(jqXHR, status, error) {
-                        // Handle error
-                        console.log(error);
+                        console.error(error);
                         $('#outputBox').html(error);
                     }
                 });
-
-                // Remove highlighting during request.
-                $('.highlight').removeClass('highlight').removeClass('error');
-
-                event.preventDefault();
-                return false;
             });
         });
     </script>
