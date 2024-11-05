@@ -29,9 +29,17 @@ function getStockInfo($symbol,$apiKey) {
     // Convert the response to an associative array
     $data = $response;
 
-    system.log($data);
+    debug_to_console($data);
     // Send the data back to the frontend as JSON
     header('Content-Type: application/json');
     echo json_encode($data);
+}
+
+function debug_to_console($data) {
+    $output = $data;
+    if (is_array($output))
+        $output = implode(',', $output);
+
+    echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
 }
 ?>
