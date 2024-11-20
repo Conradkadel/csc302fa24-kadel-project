@@ -7,17 +7,18 @@ Final project of my csc302 Web Programming 2
 This program is a comprehensive Stock/Crypto Asset Viewer that enables users to view and manage their favorite stocks and cryptocurrencies. Users can analyze market trends, read news articles, and connect with friends to discuss investment ideas and strategies. This application aims to provide a user-friendly interface for asset management and social interaction in the financial space.
 
 ## File Structure
-src/ ├── frontend/  
+src/  
+├── frontend/   
+         │   
+         ├── dashboard.html     
          │ 
-         ├── dashboard.html   
+         ├── searchViewer.html     
          │ 
-         ├── searchViewer.html   
+         ├── friendPage.html     
          │ 
-         ├── friendPage.html   
-         │ 
-         └── stockViewer.html   
-     └── backend/   
-         └── (PHP files will be developed here)  
+         └── stockViewer.html     
+└── backend/     
+         └── (PHP files will be developed here)    
          
 ## Features
 - [ ] Having a Dashboard, Search, Friend, Stockviewer and Settings Site (90% Done )
