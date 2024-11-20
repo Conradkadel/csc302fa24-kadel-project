@@ -33,7 +33,8 @@ src/
 **Completion Percentage**: 25%
 
 ## Live Version
-*Live URL will be provided later.*
+
+         https://digdug.cs.endicott.edu/~ckadel/csc302fa24-kadel-project-main/src/frontEnd/index.html
 
 ## API Actions
 - **GET /stockInfo**: Retrieves detailed information about a specific stock.
