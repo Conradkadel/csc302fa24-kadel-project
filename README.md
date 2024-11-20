@@ -17,9 +17,9 @@ src/
          ├── friendPage.html     
          │ 
          └── stockViewer.html     
-└── backend/     
-         └── (PHP files will be developed here)    
-         
+└── backend/       
+         └── (PHP files will be developed here)      
+           
 ## Features
 - [ ] Having a Dashboard, Search, Friend, Stockviewer and Settings Site (90% Done )
 - [ ] Connect to 3rd party api (Currently in the Work / 70% done)
