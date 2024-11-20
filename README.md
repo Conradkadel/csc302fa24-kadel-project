@@ -23,14 +23,14 @@ src/
 ## Features
 - [ ] Having a Dashboard, Search, Friend, Stockviewer and Settings Site (90% Done )
 - [ ] Connect to 3rd party api (Currently in the Work / 70% done)
-- [ ] Display of market information
+- [ ] Display of market information (In work / 10% done)
 - [ ] Displaying favorite asset holdings
 - [ ] Search for stock (Currently in the Work / 50% done)
 - [ ] Analysis on a chart
 - [ ] Get more information and news
 - [ ] Connect with friends and chat
 
-**Completion Percentage**: 10%
+**Completion Percentage**: 25%
 
 ## Live Version
 *Live URL will be provided later.*
