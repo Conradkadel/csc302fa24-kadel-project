@@ -48,29 +48,29 @@ function error($message){
 function createTables(){
     global $dbh;
 
-    // Create the Users table.
-    try{
-        $dbh->exec('create table if not exists Users('. 
-            'id integer primary key autoincrement, '. 
-            'username text UNIQUE, '. 
-            'password text, '. 
-            'createdAt datetime default(datetime()), '.
-            'updatedAt datetime default(datetime()))');
-    } catch(PDOException $e){
-        echo "There was an error creating the Users table: $e";
-    }
+    try {
+    $dbh->exec('CREATE TABLE IF NOT EXISTS Users (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        username TEXT UNIQUE,
+        password TEXT,
+        createdAt DATETIME DEFAULT (datetime()),
+        updatedAt DATETIME DEFAULT (datetime())
+    )');
+} catch (PDOException $e) {
+    echo "There was an error creating the Users table: " . $e->getMessage();
+}
 
-    // Create the Quizzes table.
-    try{
-        $dbh->exec('create table if not exists Stocks('. 
-            'id integer primary key autoincrement, '. 
-            'ticker text, '.
-            'name text, '. 
-            'price text, '. 
-            'foreign key(authorId) references Users(id))');
-    } catch(PDOException $e){
-        echo "There was an error creating the Quizzes table: $e";
-    }
+// Create the Stocks table.
+try {
+    $dbh->exec('CREATE TABLE IF NOT EXISTS Stocks (
+        id INTEGER PRIMARY KEY AUTOINCREMENT,
+        ticker TEXT,
+        name TEXT,
+        price TEXT
+    )');
+} catch (PDOException $e) {
+    echo "There was an error creating the Stocks table: " . $e->getMessage();
+}
 
    
 }

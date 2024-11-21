@@ -22,11 +22,11 @@
             $('#stockForm').on('submit', function(event) {
                 event.preventDefault(); // Prevent the default form submission
                 $.ajax({
-                    url: '../backEnd/api.php', // Ensure this is the correct path to api.php
-                    method: 'POST', // Make sure this is set to POST
+                    url: '../backEnd/api.php', 
+                    method: 'POST',
                     data: {
                         action: 'getStockData',
-                        symbol: $('#symbol').val() // Your input field
+                        symbol: $('#symbol').val() //  input field
                     },
                     success: function(data) {
                         console.log(data);

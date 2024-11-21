@@ -8,44 +8,28 @@
 
 
 function getStockInfo($symbol,$apiKey) {
+    
+    // This is done with help from https://www.alphavantage.co/documentation/ 
     // Set the API endpoint and your API key
-    //$symbol = "IBM"; // You can dynamically change this based on frontend input
-    $apiKey = "6PS6LZ5NU5FCXMPD"; // Replace with your actual Alpha Vantage API key
+    $symbol = "IBM"; // I can change that
+    $apiKey = "6PS6LZ5NU5FCXMPD"; 
+
+    // Set the API endpoint and your API key
     $url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=$symbol&interval=5min&apikey=$apiKey";
 
-    // Initialize cURL
-    $ch = curl_init();
+    // Fetch data from the URL using file_get_contents
+    $json = @file_get_contents($url);
 
-    // Set cURL options
-    curl_setopt($ch, CURLOPT_URL, $url);
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    // Execute the request
-    $response = curl_exec($ch);
-
-    // Check for errors
-    if ($response === false) {
+    // Error handling if the request fails
+    if ($json === false) {
         echo json_encode(["error" => "Unable to retrieve data"]);
         exit;
     }
 
-    // Close cURL
-    curl_close($ch);
-
     // Convert the response to an associative array
-    $data = $response;
+    $data = json_decode($json, true);
 
-    debug_to_console($data);
     // Send the data back to the frontend as JSON
     header('Content-Type: application/json');
     echo json_encode($data);
 }
-
-function debug_to_console($data) {
-    $output = $data;
-    if (is_array($output))
-        $output = implode(',', $output);
-
-    echo "<script>console.log('Debug Objects: " . $output . "' );</script>";
-}
-?>
