@@ -1,59 +1,199 @@
-<!-- Stock Displaying PAGE FOR Stock viwer page
- 
-      Created by Conrad Kadel 
-
--->
 <!DOCTYPE html>
+<!--
+Stock Viewer Page for Stock/Crypto Viewer
+Author: Conrad Kadel
+
+Description:
+This page displays detailed information about a stock/cryptocurrency based on the user's search.
+The page includes a graph powered by TradingView's lightweight charts and allows the user to add a stock to their favorites list.
+Citations:
+- TradingView lightweight charts (https://tradingview.github.io/lightweight-charts/)
+- Fetch API help (https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API/Using_Fetch)
+-->
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/mainStyle.css">
     <link rel="stylesheet" href="styles/stockViewer.css">
+    <script src="https://unpkg.com/lightweight-charts/dist/lightweight-charts.standalone.production.js"></script>
+    <script src="Objects/Stock.js"></script>
     <title>Stock Viewer</title>  
 </head>
+<script>
+    let symbol; 
+    // Add favourites Function
+    async function addFavourite() {
+        // Try catch is to see if backend works. If it fales it would mess up the webpage
+        try {
+            // Get the username from localStorage that we saved
+            const username = localStorage.getItem('username');
+           
+            // Fetch request to add stock to favourites
+            const response = await fetch('../backEnd/api.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                // differnt ways of doing this although this method is easier too
+                // we just send a single body of information and the backend can get it all from one sting
+                body: `action=addFavouriteStock&symbol=${encodeURIComponent(symbol)}`
+            });
+
+            // parse response as JSON and then check if it worked
+            const data = await response.json();
+            if (data.success) {
+                console.log('Stock added to favourites successfully!');
+                alert('Stock added to favourites successfully!');
+            } else {
+                alert('Failed to add stock to favourites: ');
+            }
+        } catch (error) {
+            console.error('Error adding stock to favourites:', error);
+            alert('An error occurred while adding the stock to favourites. Please try again later.');
+        }
+    }
+
+    // On Load it fills the Page with all the necccesary Infromation for the Stock we search for 
+    // there is an error still in this as we can only search for IBM right now and others dont appear to be working not sure why
+    // The filling of the WEbpage was helped out with AI as i got some problems there to display the Infromation
+    // With Help from https://tradingview.github.io/lightweight-charts/
+    document.addEventListener("DOMContentLoaded", async () => {
+        // Extract the symbol from the URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        symbol = urlParams.get('symbol'); // Assign value to global symbol variable
+        console.log("Extracted symbol: ", symbol);
+
+        if (symbol) {
+            // Fetch the stock data using the Stock class
+            const stock = await Stock.fetchStockData(symbol);
+
+            if (stock) {
+                // Update the stock symbol in the header
+                document.getElementById("stock-symbol").textContent = stock.symbol;
+
+                // Extract the most recent timestamp and data manually
+                const timestamps = Object.keys(stock.timeSeries);
+                if (timestamps.length > 0) {
+                    const latestTimestamp = timestamps[0];
+                    const latestData = stock.timeSeries[latestTimestamp];
+
+                    // Update stock price and volume (NEED TO ADD OTHER INFORMATIONS)
+                    document.getElementById("stock-price").textContent = `$${latestData["4. close"]}`;
+                    document.getElementById("price-change").textContent = `Volume: ${latestData["5. volume"]}`;
+                } else {
+                    console.error("No latest data available for symbol:", symbol);
+                }
+
+                // Prepare the data for the chart (Chart still doenst seem to update)
+                const chartData = Object.keys(stock.timeSeries).map(timestamp => {
+                    return {
+                        time: new Date(timestamp).getTime() / 1000, 
+                        open: parseFloat(stock.timeSeries[timestamp]["1. open"]),
+                        high: parseFloat(stock.timeSeries[timestamp]["2. high"]),
+                        low: parseFloat(stock.timeSeries[timestamp]["3. low"]),
+                        close: parseFloat(stock.timeSeries[timestamp]["4. close"]),
+                    };
+                });
+                // Error Handling
+                console.log("Chart Data: ", chartData);
+
+                // Sort data to make sure it is in chronological order
+                chartData.sort((a, b) => a.time - b.time);
+
+                // Clear previous chart container to avoid showing old data
+                const chartContainer = document.getElementById('chart');
+                chartContainer.innerHTML = '';
+
+                // Create the Lightweight Chart
+                const chart = LightweightCharts.createChart(chartContainer, {
+                    width: chartContainer.clientWidth,
+                    height: 400,
+                    layout: {
+                        backgroundColor: '#ffffff',
+                        textColor: '#333',
+                    },
+                    grid: {
+                        vertLines: {
+                            color: '#eee',
+                        },
+                        horzLines: {
+                            color: '#eee',
+                        },
+                    },
+                    crosshair: {
+                        mode: LightweightCharts.CrosshairMode.Normal,
+                    },
+                    rightPriceScale: {
+                        borderColor: '#ccc',
+                    },
+                    timeScale: {
+                        borderColor: '#ccc',
+                    },
+                });
+
+                // Create a candlestick series
+                const candleSeries = chart.addCandlestickSeries();
+                candleSeries.setData(chartData);
+
+                // Update the overview section with last refreshed information
+                document.getElementById("stock-overview").innerHTML = `
+                    <li><strong>Last Refreshed:</strong> ${stock.lastRefreshed}</li>
+                `;
+            } else {
+                console.error("Failed to fetch or parse stock data for symbol:", symbol);
+            }
+        } else {
+            console.error("No stock symbol found in URL");
+        }
+    });
+
+   
+</script>
+
 <body>
+    <!-- HTML is pretty empty as it all gets filled with information after its beeing loaded-->
     <div class="container">
         <header class="dashboard-header">
             <h1>Stock Viewer</h1>
-            <button class="back-button" onclick="window.location.href='dashboard.html';">&#8592; Back to Dashboard</button>
+            <button class="back-button" onclick="window.location.href='index.html';">&#8592; Back to Dashboard</button>
         </header>
 
         <main class="content">
-            <button class="favorite-button" title="Add to Favorites">&#9733;</button>
+            <button class="favorite-button" onclick="addFavourite()" title="Add to Favorites">&#9733;</button>
             <section class="stock-summary">
-                <h2>Apple Inc. (AAPL)</h2>
+                <h2 id="stock-symbol">Loading...</h2>
                 <div class="stock-price">
-                    <h3>$150.00</h3>
-                    <span class="price-change">+1.20% (Today's Change)</span>
+                    <h3 id="stock-price">Loading...</h3>
+                    <span id="price-change">Loading...</span>
                 </div>
             </section>
 
             <section class="stock-info">
                 <h3>Overview</h3>
-                <ul>
-                    <li><strong>Market Cap:</strong> $2.5T</li>
-                    <li><strong>52-Week Range:</strong> $130.00 - $175.00</li>
-                    <li><strong>P/E Ratio:</strong> 28.50</li>
+                <ul id="stock-overview">
+                    <li><strong>Market Cap:</strong> Loading...</li>
+                    <li><strong>52-Week Range:</strong> Loading...</li>
+                    <li><strong>P/E Ratio:</strong> Loading...</li>
                 </ul>
-                <p>A brief description of Apple Inc. goes here.</p>
+                <p id="company-description">Loading...</p>
             </section>
 
             <section class="graph">
                 <h3>Price Graph</h3>
-                <div class="graph-placeholder">Graph will be here</div>
+                <div id="chart" class="graph-placeholder" style="height: 400px;"></div>
             </section>
 
             <section class="additional-info">
                 <h3>Key Metrics</h3>
-                <ul>
-                    <li><strong>EPS:</strong> $5.00</li>
-                    <li><strong>Dividend Yield:</strong> 0.60%</li>
+                <ul id="key-metrics">
+                    <li><strong>EPS:</strong> Loading...</li>
+                    <li><strong>Dividend Yield:</strong> Loading...</li>
                 </ul>
                 <h3>Recent News</h3>
-                <ul>
-                    <li><a href="#">Apple announces new product launch</a></li>
-                    <li><a href="#">Apple's quarterly earnings report exceeds expectations</a></li>
+                <ul id="recent-news">
+                    <li>Loading...</li>
                 </ul>
             </section>
 
@@ -72,5 +212,5 @@
             <p>&copy; 2024 Stock Viewer App</p>
         </footer>
     </div>
-</body>
+    </body>
 </html>

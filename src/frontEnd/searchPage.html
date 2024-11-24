@@ -1,9 +1,16 @@
-<!-- Search PAGE FOR Stock viwer page
- 
-      Created by Conrad Kadel 
-
--->
 <!DOCTYPE html>
+<!--
+Search Page for Stock/Crypto Viewer
+Author: Conrad Kadel
+
+Description:
+This page allows users to search for stock or cryptocurrency information.
+It accepts user input for stock symbols, processes the request, and redirects the user to the StockViewer page.
+Citations:
+- 
+- 
+-->
+
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -12,38 +19,28 @@
     <link rel="stylesheet" href="styles/mainStyle.css">
     <link rel="stylesheet" href="styles/searchPage.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-    <style>
-        
-    </style>
+    <script src="Objects/Stock.js"></script>
     <script>
-        // Ajax Function to connect to backend. 
-        // POST request to Api.php 
-        $(document).ready(function() {
-            $('#stockForm').on('submit', function(event) {
-                event.preventDefault(); // Prevent the default form submission
-                $.ajax({
-                    url: '../backEnd/api.php', 
-                    method: 'POST',
-                    data: {
-                        action: 'getStockData',
-                        symbol: $('#symbol').val() //  input field
-                    },
-                    success: function(data) {
-                        console.log(data);
-                        $('#outputBox').html(JSON.stringify(data, null, 2));
-                    },
-                    error: function(jqXHR, status, error) {
-                        console.log(error);
-                        $('#outputBox').html(error);
-                    }
-                });
-            });
-        });
+        function loadPage() {
+            // Get the symbol from the input
+            const symbol = document.getElementById('symbol').value.trim();
+            console.log("Symbol is " + symbol);
+            if (symbol) {
+                // Redirect to the stock viewer page with the stock symbol as a URL parameter
+                // window.href is the location of current window so i can change it with this
+                window.location.href = `stockViewer.html?symbol=${encodeURIComponent(symbol)}`; // WIll send it to the right page with the right Symbol
+                console.log("Redirecting to: " + window.location.href);
+            } else {
+                console.error('No stock symbol provided');
+            }
+        }
     </script>
 </head>
 <body>
 
 <header>
+    <!--Basic HTML Page to display Search Page -->
+    <!--Need to change the hardcoded stock data -->
     <h1>Search - Stock/Crypto Viewer</h1>
     <div class="navigation-container">
         <nav class="navigation">
@@ -55,16 +52,14 @@
             <img src="https://via.placeholder.com/40" alt="Profile Picture">
         </a>
     </div>
-    
 </header>
 
 <div class="container">
 
-    <form id="stockForm">
-        <label for="symbol">Enter Stock Symbol:</label>
-        <input type="text" name="symbol" id="symbol" placeholder="e.g., IBM" required>
-        <button type="submit">Get Stock Data</button>
-    </form>
+    <!-- Removed the form and replaced it with input and button -->
+    <label for="symbol">Enter Stock Symbol:</label>
+    <input type="text" name="symbol" id="symbol" placeholder="e.g., IBM" required>
+    <button type="button" onclick="loadPage()">Get Stock Data</button>
 
     <div class="output" id="outputBox"></div>
 

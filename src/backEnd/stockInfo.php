@@ -1,13 +1,31 @@
-<!-- 3rd Partz API Backend FOR Stock viwer 
- 
-      Created by Conrad Kadel 
-
--->
 
 <?php
 
+/**
+ * Stock Information Fetcher for Stock/Crypto Viewer
+ * Author: Conrad Kadel
+ *
+ * Description:
+ * Contains functions to fetch stock data from third-party APIs such as Alpha Vantage.
+ * Provides functions that return detailed stock information to the frontend in JSON format.
+ * Citations:
+ * - Alpha Vantage API (https://www.alphavantage.co/documentation/)
+ * 
+ * MORE TO ADD HERE AS WE NEED TO FETCH MORE INFORMATION FROM API
+ */
 
-function getStockInfo($symbol,$apiKey) {
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
+
+$matches = [];
+preg_match('#^/~([^/]*)#', $_SERVER['REQUEST_URI'], $matches);
+$homeDir = count($matches) > 1 ? $matches[1] : '';
+$dataDir = "/home/$homeDir/www-data";
+if(!file_exists($dataDir)){
+    $dataDir = __DIR__;
+}
+
+function getStockInfo($symbol) {
     
     // This is done with help from https://www.alphavantage.co/documentation/ 
     // Set the API endpoint and your API key
@@ -18,7 +36,7 @@ function getStockInfo($symbol,$apiKey) {
     $url = "https://www.alphavantage.co/query?function=TIME_SERIES_INTRADAY&symbol=$symbol&interval=5min&apikey=$apiKey";
 
     // Fetch data from the URL using file_get_contents
-    $json = @file_get_contents($url);
+    $json = file_get_contents($url);
 
     // Error handling if the request fails
     if ($json === false) {
@@ -27,9 +45,7 @@ function getStockInfo($symbol,$apiKey) {
     }
 
     // Convert the response to an associative array
-    $data = json_decode($json, true);
-
+    
     // Send the data back to the frontend as JSON
-    header('Content-Type: application/json');
-    echo json_encode($data);
+    echo $json;
 }

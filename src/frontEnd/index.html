@@ -1,103 +1,287 @@
-<!-- INDEX PAGE FOR Stock viwer page
- 
-      Created by Conrad Kadel 
-
--->
-
 <!DOCTYPE html>
+<!--
+Index/Dashboard Page for Stock/Crypto Viewer
+Author: Conrad Kadel
+
+Description:
+This is the dashboard page that users see after signing in. It provides navigation options to view friends, perform stock/crypto searches, and change settings.
+It also contains a favorite stocks table and current market trends.
+Citations:
+  - Class Code ( Quizzer )
+  - AI (Styles)
+-->
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="stylesheet" href="styles/mainStyle.css">
-  <link rel="stylesheet" href="styles/dashboard.css">
-  <title>Dashboard - Stock/Crypto Viewer</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/mainStyle.css">
+    <link rel="stylesheet" href="styles/dashboard.css">
+    <title>Dashboard - Stock/Crypto Viewer</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <style>
+        /* Modal styles were helped with by AI to create the Sing UP page */
+        /* Modal styles for both Sign-In and Sign-Up */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0,0,0,0.5); /* Black background with opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
 </head>
+<script>
+    //Event Listener on Page Load that check Sign in right away and if user is not 
+    // programm will make him sign in
+    // Helped by AI to fix issues with HTML displays
+    document.addEventListener("DOMContentLoaded", () => {
+        checkSignedIn();
+
+        // Add event listener for switching from sign-in to sign-up
+        document.getElementById('switch-to-signup').addEventListener('click', function(event) {
+            event.preventDefault();
+            // Hide sign-in modal and show sign-up modal
+            document.getElementById('sign-in-modal').style.display = 'none';
+            document.getElementById('sign-up-modal').style.display = 'block';
+        });
+
+        // Close modals when the close buttons are clicked
+        document.getElementById('close-signin').addEventListener('click', function() {
+            document.getElementById('sign-in-modal').style.display = 'none';
+        });
+
+        document.getElementById('close-signup').addEventListener('click', function() {
+            document.getElementById('sign-up-modal').style.display = 'none';
+        });
+
+        // Close modals when clicking outside the modal content
+        window.onclick = function(event) {
+            if (event.target == document.getElementById('sign-in-modal')) {
+                document.getElementById('sign-in-modal').style.display = 'none';
+            }
+            if (event.target == document.getElementById('sign-up-modal')) {
+                document.getElementById('sign-up-modal').style.display = 'none';
+            }
+        };
+    });
+    // function that just cheches if User is signed in
+    function checkSignedIn() {
+        const username = localStorage.getItem('username');
+
+        if (username) {
+            console.log("User is signed in as:", username);
+            // Hide the authentication modals and display the main content
+            document.getElementById('sign-in-modal').style.display = 'none';
+            document.getElementById('sign-up-modal').style.display = 'none';
+            document.getElementById('main-content').style.display = 'block';
+        } else {
+            console.log("User is not signed in");
+            // Show the sign-in modal if the user is not signed in
+            document.getElementById('sign-in-modal').style.display = 'block';
+            document.getElementById('main-content').style.display = 'none';
+        }
+    }
+
+  
+    // Function to handle user sign-in
+    async function handleSignIn() {
+        const username = document.getElementById('sign-in-username').value.trim();
+        const password = document.getElementById('sign-in-password').value;
+
+        if (username && password) {
+            try {
+                // Send sign-in data to api.php
+                const response = await fetch('/src/backEnd/api.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `action=signIn&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to sign in');
+                }
+
+                const data = await response.json();
+                if (data.success) {
+                    // Store the JWT in localStorage if sign-in is successful
+                    localStorage.setItem('jwt', data.jwt);
+                    console.log("User signed in successfully");
+
+                    // Hide the sign-in modal and show the main content
+                    document.getElementById('sign-in-modal').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                } else {
+                    alert('Sign-in failed: ' + data.message);
+                }
+            } catch (error) {
+                console.error("Error during sign-in:", error);
+                alert("An error occurred during sign-in. Please try again.");
+            }
+        } else {
+            alert('Please enter both a username and password.');
+        }
+    }
+
+    // Function to handle user sign-up (This one remains largely the same but differnt call to BE)
+
+    async function handleSignUp() {
+        const username = document.getElementById('sign-up-username').value.trim();
+        const password = document.getElementById('sign-up-password').value;
+
+        if (username && password) {
+            try {
+                // Send sign-up data to api.php
+                const response = await fetch('/src/backEnd/api.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                    body: `action=addUser&username=${encodeURIComponent(username)}&password=${encodeURIComponent(password)}`
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to sign up');
+                }
+
+                const data = await response.json();
+                console.log(data);
+                if (data.success) {
+                    // Store the username in localStorage if sign-up is successful
+                    localStorage.setItem('username', username);
+                    console.log("User signed up successfully");
+
+                    // Hide the sign-up modal and show the main content
+                    document.getElementById('sign-up-modal').style.display = 'none';
+                    document.getElementById('main-content').style.display = 'block';
+                } else {
+                    alert('Sign-up failed: ' + data.message);
+                }
+            } catch (error) {
+                console.error("Error during sign-up:", error);
+                alert("An error occurred during sign-up. Please try again.");
+            }
+        } else {
+            alert('Please enter both a username and password.');
+        }
+    }
+
+
+</script>
 <body>
+    <header>
+        <h1>Dashboard - Stock/Crypto Viewer</h1>
+        <div class="navigation-container">
+            <nav class="navigation">
+                <a href="friendPage.html">Friends</a>
+                <a href="searchPage.html">Search</a>
+                <a href="settings.html">Settings</a>
+            </nav>
+            <a href="profile.html" class="profile-tab">
+                <img src="https://via.placeholder.com/40" alt="Profile Picture">
+            </a>
+        </div>
+    </header>
 
-  <header>
-    <h1>Dashboard - Stock/Crypto Viewer</h1>
-  
-    <div class="navigation-container">
-      <nav class="navigation">
-        <a href="friendPage.html">Friends</a>
-        <a href="searchPage.html">Search</a>
-        <a href="settings.html">Settings</a>
-      </nav>
-  
-      <a href="profile.html" class="profile-tab">
-        <img src="https://via.placeholder.com/40" alt="Profile Picture">
-      </a>
+    <div class="container">
+
+        <!-- Sign-In Modal -->
+        <div id="sign-in-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-signin">&times;</span>
+                <h2>Sign In</h2>
+                <form id="login-form">
+                    Username: <input type="text" id="sign-in-username" name="username" required/><br/>
+                    Password: <input type="password" id="sign-in-password" name="password" required/><br/>
+                    <input type="button" value="Sign In" onclick="handleSignIn()"/>
+                    <p>Don't have an account? <a href="#" id="switch-to-signup">Sign Up</a></p>
+                </form>
+            </div>
+        </div>
+
+        <!-- Sign-Up Modal -->
+        <div id="sign-up-modal" class="modal">
+            <div class="modal-content">
+                <span class="close" id="close-signup">&times;</span>
+                <h2>Sign Up</h2>
+                <form id="signup-form">
+                    Username: <input type="text" id="sign-up-username" name="username" required/><br/>
+                    Password: <input type="password" id="sign-up-password" name="password" required/><br/>
+                    <input type="button" value="Sign Up" onclick="handleSignUp()"/>
+                </form>
+            </div>
+        </div>
+        <!-- Main Content -->
+        <div id="main-content" style="display: none;">
+            <div class="dashboard">
+                <section class="market-trends">
+                    <h2>Current Market Trends</h2>
+                    <div class="trend-item">
+                        <a href="stockViewer.html"><span>Bitcoin (BTC)</span></a>
+                        <span>Up 3.2%</span>
+                    </div>
+                    <div class="trend-item">
+                        <a href="stockViewer.html"><span>Ethereum (ETH)</span></a>
+                        <span>Down 1.1%</span>
+                    </div>
+                    <!-- More trends here and I will add that late its on my List-->
+                </section>
+                <!--Favourtie not updating depending on DB entries of user-->
+                <section class="favorites-table">
+                    <h2>Your Favorites</h2>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Asset</th>
+                                <th>Current Price</th>
+                                <th>24h Change</th>
+                                <th>Market Cap</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Bitcoin (BTC)</td>
+                                <td>$50,000</td>
+                                <td>+2.5%</td>
+                                <td>$900B</td>
+                            </tr>
+                            <!-- More favorites here -->
+                        </tbody>
+                    </table>
+                </section>
+            </div>
+        </div>
     </div>
-  </header>
-
-  <div class="container">
-    <div class="dashboard">
-
-      <!-- Market Trends Section -->
-      <section class="market-trends">
-        <h2>Current Market Trends</h2>
-        <div class="trend-item">
-          <a href="stockViewer.html"><span>Bitcoin (BTC)</span></a>
-          <span>Up 3.2%</span>
-        </div>
-        <div class="trend-item">
-          <a href="stockViewer.html"><span>Ethereum (ETH)</span></a>
-          <span>Down 1.1%</span>
-        </div>
-        <div class="trend-item">
-          <a href="stockViewer.html"><span>Apple (AAPL)</span></a>
-          <span>Up 2.5%</span>
-        </div>
-        <div class="trend-item">
-          <span>Amazon (AMZN)</span>
-          <span>Down 0.7%</span>
-        </div>
-      </section>
-
-      <!-- Favorites Table Section -->
-      <section class="favorites-table">
-        <h2>Your Favorites</h2>
-        <table>
-          <thead>
-            <tr>
-              <th>Asset</th>
-              <th>Current Price</th>
-              <th>24h Change</th>
-              <th>Market Cap</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>Bitcoin (BTC)</td>
-              <td>$50,000</td>
-              <td>+2.5%</td>
-              <td>$900B</td>
-            </tr>
-            <tr>
-              <td>Ethereum (ETH)</td>
-              <td>$4,000</td>
-              <td>-1.2%</td>
-              <td>$400B</td>
-            </tr>
-            <tr>
-              <td>Apple (AAPL)</td>
-              <td>$150</td>
-              <td>+1.8%</td>
-              <td>$2.4T</td>
-            </tr>
-            <tr>
-              <td>Amazon (AMZN)</td>
-              <td>$3,200</td>
-              <td>-0.3%</td>
-              <td>$1.6T</td>
-            </tr>
-          </tbody>
-        </table>
-      </section>
-
-    </div>
-  </div>
-
 </body>
 </html>
+
