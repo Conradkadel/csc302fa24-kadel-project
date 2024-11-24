@@ -25,7 +25,7 @@ This program is a comprehensive Stock/Crypto Asset Viewer that enables users to 
 - [Done] Having a Dashboard, Search, Friend, Stockviewer and Settings Site 
 - [Done] Connect to 3rd party api for Stock Information
 - [ ] Display of market information for each Stock (In work / 65% done / Displays some information and graph cant be modified)
-- [ ] Displaying favorite asset holdings (50% done GOt the DB to work and created functions). Change the way it is displayed in index.html instead of a Table i can fromat it          nicer)
+- [ ] Displaying favorite asset holdings (50% done got the DB to work and created functions. Change the way it is displayed in index.html instead of a table i can fromat it          nicer)
 - [Done] Search for stock and find Information
 - [Done] Analysis on a chart ( Charts is beeing displayed but cant add a lot fo analysis options
 - [ ] Get more information and news ( Need to ask for more information from the API)
