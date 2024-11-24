@@ -94,6 +94,11 @@ The application utilizes four main tables:
 - Making sure all Information dispalys correctly on StockView Page. Maybe I need to add some extra API calls to retrive some more information
 - I was having trouble with the connection to the DB and uploading things to our Database. Turned out I was doing the wrong requests to the backend (Fixed)
 
+## Testing
+
+- User Authentication: The Sign In and Sign Up workflows were manually tested to ensure users could create accounts, log in, and maintain a session.
+- Debugging: Extensive use of console.log statements and echo commands helped verify data flow and catch issues during the development process.
+- Database Interactions: Tested database functions, such as adding users and adding favorites, to ensure proper data was being saved and retrieved.
 
 ---
 
