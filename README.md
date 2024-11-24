@@ -15,31 +15,34 @@ This program is a comprehensive Stock/Crypto Asset Viewer that enables users to 
          │   ├── friendPage.html     
          │   └── stockViewer.html     
          └── backend/       
-             └── (PHP files will be developed here)
+             └── api.php
+             └── db.php
+             └── stockInfo.php
+             └── data.db 
 ```
 
 ## Features
-- [ ] Having a Dashboard, Search, Friend, Stockviewer and Settings Site (90% Done)
-- [ ] Connect to 3rd party api (Currently in the Work / 70% done)
-- [ ] Display of market information (In work / 10% done)
-- [ ] Displaying favorite asset holdings
-- [ ] Search for stock (Currently in the Work / 50% done)
-- [ ] Analysis on a chart
-- [ ] Get more information and news
-- [ ] Connect with friends and chat
+- [Done] Having a Dashboard, Search, Friend, Stockviewer and Settings Site 
+- [Done] Connect to 3rd party api for Stock Information
+- [ ] Display of market information for each Stock (In work / 65% done / Displays some information and graph cant be modified)
+- [ ] Displaying favorite asset holdings (50% done got the DB to work and created functions. Change the way it is displayed in index.html instead of a table i can fromat it          nicer)
+- [Done] Search for stock and find Information
+- [Done] Analysis on a chart ( Charts is beeing displayed but cant add a lot fo analysis options
+- [ ] Get more information and news ( Need to ask for more information from the API)
+- [ ] Connect with friends and chat (This might fall out as most of the time will be used to get the main features running)
 
-**Completion Percentage**: 25%
+**Completion Percentage**: 75%
 
 ## Live Version
 
 https://digdug.cs.endicott.edu/~ckadel/csc302fa24-kadel-project-main/src/frontEnd/index.html
 
 ## API Actions
-- **GET /stockInfo**: Retrieves detailed information about a specific stock.
+- **POST /stockInfo**: Retrieves detailed information about a specific stock.
   - **Request Parameters**: `symbol` (string, required)
   - **Response**: `symbol`, `name`, `price`, `dayHigh`, `dayLow`, `volume`, `marketCap`
 
-- **GET /marketInfo**: Fetches current market information for various assets.
+- **POST /marketInfo**: Fetches current market information for various assets.
   - **Request Parameters**: `assets` (array of strings, optional)
   - **Response**: `market` (array of asset objects with `symbol`, `price`, `change`, `dayHigh`, `dayLow`)
 
@@ -86,8 +89,10 @@ The application utilizes four main tables:
 
 - Getting connection for 3rd Party API is causing some problems.
   Also don't know how to correctly set it up. Will need some trial
-  and error.
-
+  and error.(Fixed Now)
+- Making sure the User can Sing in and Sing up was causing issues. It didnt correctly display it and showed the SignIN when user was already SingedIN (Fixed Now)
+- Making sure all Information dispalys correctly on StockView Page. Maybe I need to add some extra API calls to retrive some more information
+- I was having trouble with the connection to the DB and uploading things to our Database. Turned out I was doing the wrong requests to the backend (Fixed)
 
 
 ---
