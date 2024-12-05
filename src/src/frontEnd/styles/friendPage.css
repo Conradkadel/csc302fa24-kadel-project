@@ -1,0 +1,138 @@
+@font-face {
+    font-family: 'HumaneFont';
+    src: url('styles/HKGroteskWide-Regular.otf') format('opentype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    font-family: 'HumaneFont', Arial, sans-serif;
+    color: #333;
+    background-color: #c2c2c8;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+header {
+    background-color: #3e3e3e;
+    color: #fff;
+    padding: 1em;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0; /* Remove extra padding for alignment */
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+/* Dashboard Layout */
+.dashboard {
+    display: flex;
+    flex-direction: row; /* Use row for friends and chat layout */
+    gap: 1.5em;
+}
+
+/* Friends List Section */
+.friends-list {
+    flex: 1; /* Flex grow for friends list */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-height: 500px; /* Set max height for scrolling */
+    overflow-y: auto; /* Enable scrolling */
+}
+
+.friend {
+    padding: 10px;
+    cursor: pointer;
+    transition: background 0.3s;
+}
+
+.friend:hover {
+    background-color: #f0f0f0; /* Highlight on hover */
+}
+
+/* Chat Window Section */
+.chat-window {
+    flex: 3; /* Chat window takes more space */
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    max-height: 500px; /* Set max height for scrolling */
+}
+
+.chat-header {
+    background-color: #eee; /* Light gray for chat header */
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+.chat-messages {
+    height: 300px; /* Fixed height for chat area */
+    border: 1px solid #ccc; /* Border around chat area */
+    border-radius: 5px;
+    padding: 10px;
+    overflow-y: auto; /* Scroll if content exceeds height */
+}
+
+.message {
+    margin-bottom: 10px;
+}
+
+footer {
+    text-align: center;
+}
+
+/* Navigation styles (optional if you want to add navigation in the friends tab) */
+.navigation {
+display: flex;
+gap: 1.5em;
+}
+
+.navigation-container {
+    display: flex;
+    align-items: center;
+    gap: 1em; /* Space between nav and profile */
+}
+
+.navigation a {
+    font-size: 1em;
+    color: white;
+    text-decoration: none;
+    padding: 0.5em 0.8em; /* Adjust padding to reduce height */
+    transition: color 300ms ease;
+}
+
+.navigation a:hover {
+    color: #7b64c2;
+}
+
+/* Profile Tab */
+.profile-tab img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.profile-tab img:hover {
+    transform: scale(1.1);
+}
