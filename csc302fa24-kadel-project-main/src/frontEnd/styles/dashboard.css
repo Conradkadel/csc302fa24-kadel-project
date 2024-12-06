@@ -1,0 +1,125 @@
+/* 
+ * By Conrad Kadel
+ * CSS for Frontend HTML
+ * This file supports the styling of the frontend. 
+ * AI tools were utilized to recommend improvements and provide support in refining design elements.
+ */
+header {
+    background-color: #3e3e3e;
+    color: #fff;
+    padding: 1em;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+}
+
+header h1 {
+    font-size: 1.5em;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    padding: 20px;
+}
+
+/* Dashboard Layout */
+.dashboard {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5em;
+}
+
+/* Market Trends Section */
+.market-trends {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.market-trends h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    color: #333;
+}
+
+.trend-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 0;
+    border-bottom: 1px solid #ddd;
+}
+
+.trend-item:last-child {
+    border-bottom: none;
+}
+
+/* Favorites Table Section */
+.favorites-table {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.favorites-table h2 {
+    font-size: 1.5em;
+    margin-bottom: 0.5em;
+    color: #333;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+}
+
+th, td {
+    padding: 10px;
+    border: 1px solid #ddd;
+    text-align: center;
+}
+
+th {
+    background-color: #333;
+    color: #fff;
+}
+.navigation {
+    display: flex;
+    gap: 1.5em;
+}
+.navigation-container {
+    display: flex;
+    align-items: center;
+    gap: 1em; 
+}
+
+.navigation a {
+    font-size: 1em;
+    color: white;
+    text-decoration: none;
+    padding: 0.5em 0.8em; 
+    transition: color 300ms ease;
+}
+
+.navigation a:hover {
+color: #7b64c2;
+}
+
+/* Profile Tab */
+.profile-tab img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 2px solid #fff;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.profile-tab img:hover {
+transform: scale(1.1);
+}

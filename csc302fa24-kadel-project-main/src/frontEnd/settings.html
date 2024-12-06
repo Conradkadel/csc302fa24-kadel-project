@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--
+Settings Page for Stock/Crypto Viewer
+Author: Conrad Kadel
+
+Description:
+This page allows users to change app preferences, such as setting a preferred theme, logging out of the application, and viewing app credits.
+Includes JavaScript to handle color theme changes and interactions.
+
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/mainStyle.css">
+    <link rel="stylesheet" href="styles/settings.css">
+    <title>Settings - Stock/Crypto Viewer</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="js/settings.js" defer></script> <!-- JavaScript file for managing settings -->
+    <style>
+        /* Modal styles for both Sign-In and Sign-Up */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            padding-top: 100px; /* Location of the box */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            background-color: rgba(0, 0, 0, 0.5); /* Black background with opacity */
+        }
+
+        .modal-content {
+            background-color: #fefefe;
+            margin: auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            position: relative;
+        }
+
+        .close {
+            color: #aaa;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+            font-size: 28px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<script>    
+    // Trying to save the Color here to maybe use it later
+    document.addEventListener("DOMContentLoaded", () => {
+    // Load saved color from localStorage
+    const savedColor = localStorage.getItem('mainColor');
+    if (savedColor) {
+        document.documentElement.style.setProperty('--main-color', savedColor);
+        document.getElementById('main-color').value = savedColor;
+    }
+
+    // Handle color picker change (Helped with AI)
+    const colorPicker = document.getElementById('main-color');
+    colorPicker.addEventListener('input', (event) => {
+        const newColor = event.target.value;
+        document.documentElement.style.setProperty('--main-color', newColor);
+        // Save the selected color to localStorage
+        localStorage.setItem('mainColor', newColor);
+    });
+
+    // Handle logout button click with an alerto to the user
+    const logoutButton = document.getElementById('logout-button');
+    logoutButton.addEventListener('click', () => {
+        // Clear session information
+        localStorage.removeItem('username'); 
+        localStorage.removeItem('jwt');      
+        alert('You have been logged out.');
+        
+        // Redirect to the login page or refresh to show login state
+        window.location.href = 'index.html';
+    });
+});
+
+</script>
+
+<body>
+    <header>
+        <h1>Settings - Stock/Crypto Viewer</h1>
+        <div class="navigation-container">
+            <nav class="navigation">
+                <a href="index.html">Dashboard</a>
+                <a href="searchPage.html">Search</a>
+                <!-- <a href="friendPage.html">Friends</a> -->
+            </nav>
+        </div>
+    </header>
+
+    <div class="container">
+        <section class="settings-section">
+            <h2>Personalize Your Experience</h2>
+
+            <!-- Color Picker Setting -->
+            <div class="setting-item">
+                <label for="main-color">Choose Main Color of the Page:</label>
+                <input type="color" id="main-color" name="main-color" value="#ffffff">
+            </div>
+
+            <!-- Logout Button -->
+            <div class="setting-item">
+                <button id="logout-button">Logout</button>
+            </div>
+
+            <!-- Credits Section -->
+            <div class="credits-section">
+                <h3>Credits</h3>
+                <p>Developed by Conrad Kadel.</p>
+                <p>© 2024 Stock/Crypto Viewer. All rights reserved.</p>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>
