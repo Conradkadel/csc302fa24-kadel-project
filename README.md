@@ -1,5 +1,5 @@
 # csc302fa24-kadel-project
-Final project of my csc302 Web Programming 2
+Final project of my CSC302 Web Programming 2
 
 # Stock/Crypto Asset Viewer
 
@@ -15,91 +15,134 @@ This program is a comprehensive Stock/Crypto Asset Viewer that enables users to 
          │   ├── friendPage.html     
          │   └── stockViewer.html     
          └── backend/       
-             └── api.php
-             └── db.php
-             └── stockInfo.php
-             └── data.db 
+             ├── api.php
+             ├── db.php
+             ├── stockInfo.php
+             └── data.db
 ```
 
 ## Features
-- [Done] Having a Dashboard, Search, Friend, Stockviewer and Settings Site 
-- [Done] Connect to 3rd party api for Stock Information
-- [ ] Display of market information for each Stock (In work / 65% done / Displays some information and graph cant be modified)
-- [ ] Displaying favorite asset holdings (50% done got the DB to work and created functions. Change the way it is displayed in index.html instead of a table i can fromat it          nicer)
-- [Done] Search for stock and find Information
-- [Done] Analysis on a chart ( Charts is beeing displayed but cant add a lot fo analysis options
-- [ ] Get more information and news ( Need to ask for more information from the API)
-- [ ] Connect with friends and chat (This might fall out as most of the time will be used to get the main features running)
+- [x] Dashboard, Search, Friend, Stock Viewer, and Settings pages implemented
+- [x] Integration with 3rd-party API for stock and cryptocurrency data
+- [x] Display detailed market information for each stock
+- [x] Display favorite assets with improved frontend formatting
+- [x] Search functionality for stocks with detailed results
+- [x] Analysis chart display with basic charts
+- [x] Fetch additional news and financial information from APIs
+- [x] Friend connection and chat functionality
 
-**Completion Percentage**: 75%
+**Completion Percentage**: 100%
 
 ## Live Version
-
-https://digdug.cs.endicott.edu/~ckadel/csc302fa24-kadel-project-main/src/frontEnd/index.html
+         https://digdug.cs.endicott.edu/~ckadel/csc302fa24-kadel-project-main/src/frontEnd/index.html
 
 ## API Actions
-- **POST /stockInfo**: Retrieves detailed information about a specific stock.
-  - **Request Parameters**: `symbol` (string, required)
-  - **Response**: `symbol`, `name`, `price`, `dayHigh`, `dayLow`, `volume`, `marketCap`
 
-- **POST /marketInfo**: Fetches current market information for various assets.
-  - **Request Parameters**: `assets` (array of strings, optional)
-  - **Response**: `market` (array of asset objects with `symbol`, `price`, `change`, `dayHigh`, `dayLow`)
+### Stock Data
+- **POST /stockInfo**
+  - Retrieves detailed information about a specific stock.
+  - **Request Parameters**:
+    - `symbol` (required): The stock symbol (e.g., AAPL, TSLA).
+    - `interval` (optional): Data interval (e.g., "5min", "1day").
+  - **Response**:
+    - Includes `symbol`, `name`, `price`, `dayHigh`, `dayLow`, `volume`, `marketCap`.
 
-- **POST /favoriteStock**: Adds a stock to the user's favorites.
-  - **Request Parameters**: `userId` (string, required), `symbol` (string, required)
-  - **Response**: `status`, `message`
+- **POST /marketInfo**
+  - Fetches current market information for various assets.
+  - **Request Parameters**:
+    - `assets` (optional): Array of asset symbols.
+  - **Response**:
+    - Array of market details including `symbol`, `price`, `change`, `dayHigh`, `dayLow`.
 
-- **POST /createUser**: Registers a new user in the system.
-  - **Request Parameters**: `username` (string, required), `password` (string, required), `email` (string, required)
-  - **Response**: `status`, `userId`, `message`
+### User Authentication
+- **POST /createUser**
+  - Registers a new user.
+  - **Request Parameters**:
+    - `username` (required)
+    - `password` (required)
+    - `email` (required)
+  - **Response**:
+    - `status`, `userId`, `message`.
 
-- **POST /loginUser**: Authenticates a user and starts a session.
-  - **Request Parameters**: `username` (string, required), `password` (string, required)
-  - **Response**: `status`, `token`, `message`
+- **POST /loginUser**
+  - Authenticates a user and starts a session.
+  - **Request Parameters**:
+    - `username` (required)
+    - `password` (required)
+  - **Response**:
+    - `status`, `token`, `message`.
 
-- **POST /logoutUser**: Ends the session for the current user.
-  - **Request Parameters**: `userId` (string, required), `token` (string, required)
-  - **Response**: `status`, `message`
+- **POST /logoutUser**
+  - Logs out the current user.
+  - **Request Parameters**:
+    - `userId` (required)
+    - `token` (required)
+  - **Response**:
+    - `status`, `message`.
+
+### Favorites
+- **POST /favoriteStock**
+  - Adds a stock to a user's favorites.
+  - **Request Parameters**:
+    - `userId` (required)
+    - `symbol` (required)
+  - **Response**:
+    - `status`, `message`.
 
 ## Data Model Description
-The application utilizes four main tables:
+The application utilizes the following tables:
 
 1. **Users**
-   - `id`: Unique identifier for each user
-   - `name`: User's name
-   - `password`: Hashed user password
+   - `id`: Unique identifier
+   - `username`: User's login name
+   - `password`: Hashed password
 
 2. **Stocks**
-   - `id`: Unique identifier for each stock
-   - `name`: Name of the stock
-   - `price`: Current price of the stock
-   - `information`: Additional information about the stock
+   - `id`: Unique identifier
+   - `name`: Stock name
+   - `price`: Current price
+   - `information`: Additional details about the stock
 
-3. **StockFavorites**
-   - `userId`: Identifier linking the favorite to a user (foreign key referencing `Users.id`)
-   - `stockId`: Identifier linking the favorite to a stock (foreign key referencing `Stocks.id`)
+3. **Favorites**
+   - `userId`: User reference (foreign key to `Users.id`)
+   - `stockId`: Stock reference (foreign key to `Stocks.id`)
 
 4. **StockHistory**
-   - `stockId`: Identifier for the stock (foreign key referencing `Stocks.id`)
-   - `timestamp`: Date/time when the price was recorded
-   - `price`: Price of the stock at the given `timestamp`
+   - `stockId`: Reference to a stock
+   - `timestamp`: Recorded date and time
+   - `price`: Price at the recorded time
 
 ## Error Handling / Issues
 
-- Getting connection for 3rd Party API is causing some problems.
-  Also don't know how to correctly set it up. Will need some trial
-  and error.(Fixed Now)
-- Making sure the User can Sing in and Sing up was causing issues. It didnt correctly display it and showed the SignIN when user was already SingedIN (Fixed Now)
-- Making sure all Information dispalys correctly on StockView Page. Maybe I need to add some extra API calls to retrive some more information
-- I was having trouble with the connection to the DB and uploading things to our Database. Turned out I was doing the wrong requests to the backend (Fixed)
+### Challenges Encountered
+1. **Third-party API integration**:
+   - Initially struggled with connecting to the Alpha Vantage API due to incorrect endpoint parameters.
+   - Solution: Refined API request structure and validated keys (Resolved).
+
+2. **User Authentication Bugs**:
+   - Login and logout issues occurred when session variables weren't properly set.
+   - Solution: Adjusted session logic to ensure correct authentication state (Resolved).
+
+3. **Database Issues**:
+   - Faced issues saving data due to malformed SQL queries and mismatched table schemas.
+
+5. **Graph Rendering Errors**:
+   - Debugging JavaScript chart rendering was challenging due to asynchronous API calls and improper handling of data formats.
+   - Solution: Added safeguards for missing data and asynchronous loading (Resolved).
 
 ## Testing
 
-- User Authentication: The Sign In and Sign Up workflows were manually tested to ensure users could create accounts, log in, and maintain a session.
-- Debugging: Extensive use of console.log statements and echo commands helped verify data flow and catch issues during the development process.
-- Database Interactions: Tested database functions, such as adding users and adding favorites, to ensure proper data was being saved and retrieved.
+1. **User Authentication**:
+   - Verified account creation, login, and logout processes.
+   - Tested session persistence and ensured unauthorized actions return appropriate errors.
+
+2. **API Integration**:
+   - Manually tested all API endpoints with different parameters to verify correct responses and error handling.
+
+
 
 ---
 
 For more information, please refer to the documentation within the repository.
+
+
