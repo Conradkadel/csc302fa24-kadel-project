@@ -7,8 +7,7 @@ Description:
 This page allows users to search for stock or cryptocurrency information.
 It accepts user input for stock symbols, processes the request, and redirects the user to the StockViewer page.
 Citations:
-- 
-- 
+- Inspired by general web development practices on W3Schools (https://www.w3schools.com/)
 -->
 
 <html lang="en">
@@ -20,15 +19,34 @@ Citations:
     <link rel="stylesheet" href="styles/searchPage.css">
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="Objects/Stock.js"></script>
+    <style>
+        .container {
+            text-align: center;
+            margin-top: 50px;
+        }
+        #symbol, #asset-type {
+            width: 50%;
+            padding: 10px;
+            font-size: 1.2em;
+            margin-bottom: 20px;
+        }
+        #search-button {
+            padding: 10px 20px;
+            font-size: 1.2em;
+        }
+    </style>
     <script>
         function loadPage() {
-            // Get the symbol from the input
-            const symbol = document.getElementById('symbol').value.trim();
+            // Get the symbol from the input and the selected asset type
+            const symbol = document.getElementById('symbol').value.trim().toUpperCase();
+            const assetType = document.getElementById('asset-type').value;
+
             console.log("Symbol is " + symbol);
+            console.log("Asset type is " + assetType);
+
             if (symbol) {
-                // Redirect to the stock viewer page with the stock symbol as a URL parameter
-                // window.href is the location of current window so i can change it with this
-                window.location.href = `stockViewer.html?symbol=${encodeURIComponent(symbol)}`; // WIll send it to the right page with the right Symbol
+                // Redirect to the stock viewer page with the stock symbol and asset type as URL parameters
+                window.location.href = `stockViewer.html?symbol=${encodeURIComponent(symbol)}&type=${encodeURIComponent(assetType)}`;
                 console.log("Redirecting to: " + window.location.href);
             } else {
                 console.error('No stock symbol provided');
@@ -39,13 +57,11 @@ Citations:
 <body>
 
 <header>
-    <!--Basic HTML Page to display Search Page -->
-    <!--Need to change the hardcoded stock data -->
     <h1>Search - Stock/Crypto Viewer</h1>
     <div class="navigation-container">
         <nav class="navigation">
             <a href="index.html">Dashboard</a>
-            <a href="friendPage.html">Friends</a>
+            <!-- <a href="friendPage.html">Friends</a> -->
             <a href="settings.html">Settings</a>
         </nav>
         <a href="profile.html" class="profile-tab">
@@ -56,52 +72,21 @@ Citations:
 
 <div class="container">
 
-    <!-- Removed the form and replaced it with input and button -->
-    <label for="symbol">Enter Stock Symbol:</label>
-    <input type="text" name="symbol" id="symbol" placeholder="e.g., IBM" required>
-    <button type="button" onclick="loadPage()">Get Stock Data</button>
+    <!-- Search input for Stock/Crypto with a selector for asset type -->
+    <label for="symbol">Enter Stock or Crypto Symbol:</label><br>
+    <input type="text" name="symbol" id="symbol" placeholder="e.g., IBM or BTC" required><br><br>
+    
+    <label for="asset-type">Select Asset Type:</label><br>
+    <select id="asset-type" name="asset-type">
+        <option value="stock">Stock</option>
+        <option value="crypto">Cryptocurrency</option>
+    </select><br><br>
+
+    <button type="button" id="search-button" onclick="loadPage()">Get Data</button>
 
     <div class="output" id="outputBox"></div>
 
-    <section class="popular-searches">
-        <h2>Popular Searches</h2>
-        <table>
-            <thead>
-                <tr>
-                    <th>Stock Symbol</th>
-                    <th>Company Name</th>
-                    <th>Current Price</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>TSLA</td>
-                    <td>Tesla, Inc.</td>
-                    <td>$750.00</td>
-                </tr>
-                <tr>
-                    <td>AMZN</td>
-                    <td>Amazon.com, Inc.</td>
-                    <td>$3,200.00</td>
-                </tr>
-                <tr>
-                    <td>AAPL</td>
-                    <td>Apple Inc.</td>
-                    <td>$150.00</td>
-                </tr>
-                <tr>
-                    <td>GOOGL</td>
-                    <td>Alphabet Inc.</td>
-                    <td>$2,800.00</td>
-                </tr>
-                <tr>
-                    <td>MSFT</td>
-                    <td>Microsoft Corporation</td>
-                    <td>$300.00</td>
-                </tr>
-            </tbody>
-        </table>
-    </section>
+         
 </div>
 
 </body>

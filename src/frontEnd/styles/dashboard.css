@@ -1,4 +1,9 @@
-
+/* 
+ * By Conrad Kadel
+ * CSS for Frontend HTML
+ * This file supports the styling of the frontend. 
+ * AI tools were utilized to recommend improvements and provide support in refining design elements.
+ */
 header {
     background-color: #3e3e3e;
     color: #fff;
@@ -12,7 +17,7 @@ header {
 header h1 {
     font-size: 1.5em;
     margin: 0;
-    padding: 0; /* Remove extra padding for alignment */
+    padding: 0;
 }
 
 .container {
@@ -90,14 +95,14 @@ th {
 .navigation-container {
     display: flex;
     align-items: center;
-    gap: 1em; /* Space between nav and profile */
+    gap: 1em; 
 }
 
 .navigation a {
     font-size: 1em;
     color: white;
     text-decoration: none;
-    padding: 0.5em 0.8em; /* Adjust padding to reduce height */
+    padding: 0.5em 0.8em; 
     transition: color 300ms ease;
 }
 

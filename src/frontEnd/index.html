@@ -8,7 +8,8 @@ This is the dashboard page that users see after signing in. It provides navigati
 It also contains a favorite stocks table and current market trends.
 Citations:
   - Class Code ( Quizzer )
-  - AI (Styles)
+  - AI (Styles) and reccomendations on how to parse informations
+
 -->
 <html lang="en">
 <head>
@@ -16,6 +17,8 @@ Citations:
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="styles/mainStyle.css">
     <link rel="stylesheet" href="styles/dashboard.css">
+    <script src="Objects/Stock.js"></script>
+    <script src="Objects/Crypto.js"></script>
     <title>Dashboard - Stock/Crypto Viewer</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
@@ -57,15 +60,54 @@ Citations:
             text-decoration: none;
             cursor: pointer;
         }
+
+        #market-news-section {
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 5px;
+        }
+
+        .news-card {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 15px;
+            width: calc(33% - 50px);
+            box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .news-card h3 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        .news-card p {
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        .news-card img {
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+
+
     </style>
 </head>
 <script>
     //Event Listener on Page Load that check Sign in right away and if user is not 
     // programm will make him sign in
     // Helped by AI to fix issues with HTML displays
-    document.addEventListener("DOMContentLoaded", () => {
-        checkSignedIn();
-
+    document.addEventListener("DOMContentLoaded", async () => {
+        await checkSignedIn();
         // Add event listener for switching from sign-in to sign-up
         document.getElementById('switch-to-signup').addEventListener('click', function(event) {
             event.preventDefault();
@@ -92,7 +134,165 @@ Citations:
                 document.getElementById('sign-up-modal').style.display = 'none';
             }
         };
+        await fetchFavorites();
+        await getMarketInfo(); 
     });
+
+    async function fetchFavorites() {
+        console.log("STEP !");
+        try {
+            const response = await fetch('/src/backEnd/api.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=getUserFavorites',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch favorites');
+            }
+            
+            const data = await response.json();
+            console.log("STEP 2", data);
+            let favorite;
+            if (data.success) {
+                const favoritesTable = document.querySelector('.favorites-table tbody');
+                favoritesTable.innerHTML = ''; // Clear previous entries
+                console.log("STEP 3");
+                for (favorite of data.favorites) {
+                    console.log("Favorite before fetchStockData:", favorite.isCrypto);
+                    let stockData;
+                    if(favorite.isCrypto == true) {
+                        stockData = await Crypto.fetchCryptoData(favorite.ticker);
+                    } else {
+                        stockData = await Stock.fetchStockData(favorite.ticker, "1min");
+                    }
+                    console.log("Stock Data:", stockData.isCrypto);
+
+                    const row = document.createElement('tr');
+                    if(stockData.isCrypto == "crypto")
+                    {
+                        row.innerHTML = `
+                        <a href="stockViewer.html?symbol=${encodeURIComponent(stockData.symbol)}&type=${encodeURIComponent(stockData.isCrypto)}">
+                            ${favorite.ticker}
+                        </a>
+                        <td>$${stockData.currentPrice}</td>
+                    `;
+                    favoritesTable.appendChild(row);
+                    }
+                    else{
+                        row.innerHTML = `
+                        <a href="stockViewer.html?symbol=${encodeURIComponent(stockData.symbol)}&type=${encodeURIComponent(stockData.isCrypto)}">
+                            ${favorite.ticker}
+                        </a>
+                        <td>$${stockData.marketCap}</td>
+                    `;
+                    favoritesTable.appendChild(row);
+                    }
+                   
+                }
+            } else {
+                console.error('Failed to fetch favorites:', data.error);
+            }
+        } catch (error) {
+            console.error('Error fetching favorites:', error);
+        }
+    }
+
+
+
+    async function getMarketInfo()
+    {
+        console.log("Get market infi");
+        try {
+            const response = await fetch('/src/backEnd/api.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'action=getMarketInfo',
+            });
+
+            if (!response.ok) {
+                throw new Error('Failed to fetch favorites');
+            }
+
+            const data = await response.json();
+
+            console.log("STEP 2", data.feed);
+            
+            displayMarketNews(data.feed);
+         
+        } catch (error) {
+            console.error('Error fetching market info:', error);
+        }
+    }
+
+    function displayMarketNews(feed) {
+        const newsContainer = document.getElementById('news-container');
+        newsContainer.innerHTML = ''; // Clear any previous content
+
+        feed.forEach(item => {
+            const newsCard = document.createElement('div');
+            newsCard.classList.add('news-card');
+
+            // News Title with Link
+            const title = document.createElement('h3');
+            const link = document.createElement('a');
+            link.href = item.url;
+            link.textContent = item.title;
+            link.target = '_blank'; // Open in a new tab
+            title.appendChild(link);
+
+            // Summary
+            const summary = document.createElement('p');
+            summary.textContent = item.summary;
+
+            // Sentiment Label
+            const sentiment = document.createElement('p');
+            sentiment.innerHTML = `<strong>Overall Sentiment:</strong> ${item.overall_sentiment_label}`;
+
+            // Ticker Sentiments (make tickers clickable)
+            const tickers = document.createElement('ul');
+            tickers.innerHTML = '<strong>Ticker Sentiments:</strong>';
+            item.ticker_sentiment.forEach(ticker => {
+                const tickerItem = document.createElement('li');
+
+                // Create a clickable link for each ticker
+                const tickerLink = document.createElement('a');
+                tickerLink.href = item.url; // Use the same link as the news article
+                tickerLink.textContent = ticker.ticker;
+                tickerLink.target = '_blank'; // Open in a new tab
+
+                tickerItem.appendChild(tickerLink);
+                tickerItem.innerHTML += ` - ${ticker.ticker_sentiment_label} (${ticker.ticker_sentiment_score})`;
+                tickers.appendChild(tickerItem);
+            });
+
+            // Banner Image
+            if (item.banner_image) {
+                const image = document.createElement('img');
+                image.src = item.banner_image;
+                image.alt = item.title;
+                image.style.width = '100%';
+                image.style.borderRadius = '8px';
+                newsCard.appendChild(image);
+            }
+
+            // Append elements to the news card
+            newsCard.appendChild(title);
+            newsCard.appendChild(summary);
+            newsCard.appendChild(sentiment);
+            newsCard.appendChild(tickers);
+
+            // Append the news card to the container
+            newsContainer.appendChild(newsCard);
+        });
+    }
+
+
+
     // function that just cheches if User is signed in
     function checkSignedIn() {
         const username = localStorage.getItem('username');
@@ -133,9 +333,11 @@ Citations:
                 }
 
                 const data = await response.json();
+
+                console.log(data);
                 if (data.success) {
                     // Store the JWT in localStorage if sign-in is successful
-                    localStorage.setItem('jwt', data.jwt);
+                    localStorage.setItem('username', username); // Optional: store the username as well
                     console.log("User signed in successfully");
 
                     // Hide the sign-in modal and show the main content
@@ -203,7 +405,7 @@ Citations:
         <h1>Dashboard - Stock/Crypto Viewer</h1>
         <div class="navigation-container">
             <nav class="navigation">
-                <a href="friendPage.html">Friends</a>
+                <!-- <a href="friendPage.html">Friends</a> -->
                 <a href="searchPage.html">Search</a>
                 <a href="settings.html">Settings</a>
             </nav>
@@ -244,18 +446,14 @@ Citations:
         <!-- Main Content -->
         <div id="main-content" style="display: none;">
             <div class="dashboard">
-                <section class="market-trends">
-                    <h2>Current Market Trends</h2>
-                    <div class="trend-item">
-                        <a href="stockViewer.html"><span>Bitcoin (BTC)</span></a>
-                        <span>Up 3.2%</span>
+                <section id="market-news-section">
+                    <h2>Market News</h2>
+                    <div id="news-container" class="news-grid">
+                        <!-- News items will be dynamically inserted here -->
                     </div>
-                    <div class="trend-item">
-                        <a href="stockViewer.html"><span>Ethereum (ETH)</span></a>
-                        <span>Down 1.1%</span>
-                    </div>
-                    <!-- More trends here and I will add that late its on my List-->
                 </section>
+                
+                
                 <!--Favourtie not updating depending on DB entries of user-->
                 <section class="favorites-table">
                     <h2>Your Favorites</h2>
@@ -263,22 +461,15 @@ Citations:
                         <thead>
                             <tr>
                                 <th>Asset</th>
-                                <th>Current Price</th>
-                                <th>24h Change</th>
-                                <th>Market Cap</th>
+                                <th>Market Cap / Price</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>Bitcoin (BTC)</td>
-                                <td>$50,000</td>
-                                <td>+2.5%</td>
-                                <td>$900B</td>
-                            </tr>
-                            <!-- More favorites here -->
+                            <!-- Filled by JavaScript after fetching data -->
                         </tbody>
                     </table>
                 </section>
+                
             </div>
         </div>
     </div>

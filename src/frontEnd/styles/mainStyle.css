@@ -1,6 +1,13 @@
+/* 
+ * By Conrad Kadel
+ * CSS for Frontend HTML
+ * This file supports the styling of the frontend. 
+ * AI tools were utilized to recommend improvements and provide support in refining design elements.
+ */
+
 @font-face {
     font-family: 'HumaneFont';
-    src: url('styles/HKGroteskWide-Regular.otf') format('opentype');
+    src: url('HKGroteskWide-Regular.otf') format('opentype');
     font-weight: normal;
     font-style: normal;
 }
@@ -29,7 +36,7 @@ header {
 header h1 {
     font-size: 1.5em;
     margin: 0;
-    padding: 0; /* Remove extra padding for alignment */
+    padding: 0; 
 }
 
 

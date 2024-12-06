@@ -6,13 +6,16 @@
  * Description:
  * Connects to the SQLite database (`data.db`) and provides functions for user management, stock management, and creating tables.
  * Handles all the CRUD operations needed for users and stocks.
+ * 
  * Citations:
- * - Help from Class code ( Quizzer )
+ * - Help from Class code (Quizzer)
+ * - AI for Comments
  */
 
 $dbName = 'data.db';
 header('Content-Type: application/json');
 
+// Set up the data directory based on the environment
 $matches = [];
 preg_match('#^/~([^/]*)#', $_SERVER['REQUEST_URI'], $matches);
 $homeDir = count($matches) > 1 ? $matches[1] : '';
@@ -21,9 +24,16 @@ if (!file_exists($dataDir)) {
     $dataDir = __DIR__;
 }
 
+// Database connection with error handling
 $dbh = new PDO("sqlite:$dataDir/$dbName");
 $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
+/**
+ * Returns an error response.
+ *
+ * @param string $message The error message to return.
+ * @return array An associative array containing success status and the error message.
+ */
 function error($message) {
     return [
         'success' => false,
@@ -31,6 +41,9 @@ function error($message) {
     ];
 }
 
+/**
+ * Creates necessary tables (Users, Stocks, Favorites) in the database if they do not exist.
+ */
 function createTables() {
     global $dbh;
 
@@ -46,7 +59,6 @@ function createTables() {
         echo "There was an error creating the Users table: " . $e->getMessage();
     }
 
-    // Create the Stocks table.
     try {
         $dbh->exec('CREATE TABLE IF NOT EXISTS Stocks (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -58,34 +70,34 @@ function createTables() {
         echo "There was an error creating the Stocks table: " . $e->getMessage();
     }
 
-    // Create the Favourites table.
     try {
-        $dbh->exec('CREATE TABLE IF NOT EXISTS Favourites (
+        $dbh->exec('CREATE TABLE IF NOT EXISTS Favorites (
             id INTEGER PRIMARY KEY AUTOINCREMENT,
-            userId INTEGER,
+            username TEXT,
             ticker TEXT,
-            addedAt DATETIME DEFAULT (datetime()),
-            FOREIGN KEY(userId) REFERENCES Users(id)
+            isCrypto BOOLEAN,
+            createdAt DATETIME DEFAULT (datetime()),
+            FOREIGN KEY(username) REFERENCES Users(username)
         )');
     } catch (PDOException $e) {
-        echo "There was an error creating the Favourites table: " . $e->getMessage();
+        echo "There was an error creating the Favorites table: " . $e->getMessage();
     }
 }
+
 /**
  * Adds a new user to the Users table in the database.
  *
  * @param string $username The username of the new user.
  * @param string $hashedPassword The hashed password of the new user.
  * 
- * @return array Returns an associative array with the success status and the user ID if successful, or an error message if an exception occurs.
+ * @return array An associative array with the success status and user ID, or an error message.
  */
-
 function addUser($username, $hashedPassword) {
     global $dbh;
     $id = null;
     try {
         $statement = $dbh->prepare(
-            'insert into Users(username, password) values (:username, :password)'
+            'INSERT INTO Users(username, password) VALUES (:username, :password)'
         );
         $statement->execute([
             ':username' => $username,
@@ -103,19 +115,19 @@ function addUser($username, $hashedPassword) {
         'id' => $id
     ];
 }
+
 /**
  * Retrieves a user's data from the Users table based on the given username.
  *
- * @param string $username The username of the user to retrieve.
+ * @param string $username The username to search for.
  * 
- * @return array Returns an associative array containing the user's data if found, or an error message if the user is not found or an exception occurs.
- * 
+ * @return array An associative array containing the user's data or an error message.
  */
 function getUserByUsername($username) {
     global $dbh;
     $userData = null;
     try {
-        $statement = $dbh->prepare('select * from Users where username = :username');
+        $statement = $dbh->prepare('SELECT * FROM Users WHERE username = :username');
         $statement->execute([
             ':username' => $username
         ]);
@@ -133,31 +145,70 @@ function getUserByUsername($username) {
     return $userData;
 }
 
-function addFavourite($username, $ticker) {
+/**
+ * Adds a stock or cryptocurrency to the user's favorites.
+ *
+ * @param string $username The username of the user.
+ * @param string $ticker The ticker symbol of the stock or cryptocurrency.
+ * @param bool $isCrypto True if the favorite is a cryptocurrency, false otherwise.
+ * 
+ * @return array An associative array indicating success or failure with an error message if applicable.
+ */
+function addFavourite($username, $ticker, $isCrypto) {
     global $dbh;
     try {
-        // Retrieve the user by username
         $user = getUserByUsername($username);
         if (!$user['success']) {
             return $user;
         }
-
-        // Insert the favourite stock into the Favourites table
-        $statement = $dbh->prepare(
-            'insert into Favourites(userId, ticker) values (:userId, :ticker)'
-        );
-        $statement->execute([
-            ':userId' => $user['id'],
-            ':ticker' => $ticker
+        
+        // Check if the ticker already exists for this user
+        $checkStatement = $dbh->prepare('SELECT COUNT(*) FROM Favorites WHERE username = :username AND ticker = :ticker');
+        $checkStatement->execute([
+            ':username' => $username,
+            ':ticker' => strtoupper($ticker) // Consistency: Convert to uppercase
         ]);
+
+        $exists = $checkStatement->fetchColumn();
+        if ($exists > 0) {
+            return [
+                'success' => false,
+                'message' => 'This ticker is already in your favorites.'
+            ];
+        }
+
+        $statement = $dbh->prepare('INSERT INTO Favorites (username, ticker, isCrypto) VALUES (:username, :ticker, :isCrypto)');
+        $statement->execute([
+            ':username' => $username,
+            ':ticker' => strtoupper($ticker), // Converting symbol to uppercase for consistency
+            ':isCrypto' => $isCrypto
+        ]);
+        return ['success' => true];
     } catch (PDOException $e) {
-        return error("There was an error adding the favourite: $e");
+        return error("There was an error adding the favorite: $e");
     }
-    return [
-        'success' => true
-    ];
 }
+
+/**
+ * Retrieves the list of a user's favorite stocks or cryptocurrencies.
+ *
+ * @param string $username The username of the user.
+ * 
+ * @return array An associative array containing the success status and a list of favorites, or an error message.
+ */
+function getUserFavorites($username) {
+    global $dbh;
+    try {
+        $statement = $dbh->prepare('SELECT ticker, isCrypto FROM Favorites WHERE username = :username');
+        $statement->execute([':username' => $username]);
+        $favorites = $statement->fetchAll(PDO::FETCH_ASSOC);
+        return [
+            'success' => true,
+            'favorites' => $favorites
+        ];
+    } catch (PDOException $e) {
+        return error("Error retrieving favorite stocks: $e");
+    }
+}
+
 ?>
-
-
-
